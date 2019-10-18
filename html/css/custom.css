@@ -1,0 +1,31 @@
+.tag {
+	padding-top: 10px;
+}
+
+.light {
+	color: #aaa;
+}
+
+#modalDialog {
+    display: none;
+}
+
+#header {
+	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+	padding-left: 10px;
+}
+
+.naked_list {
+	list-style: none;
+}
+
+#total_score_label {
+	font-size: x-large;
+}
+
+#footer {
+	text-align: center;
+	font-size: small;
+	color: #aaa;
+	padding-top: 25px;
+}

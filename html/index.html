@@ -1,0 +1,1206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+        <title>JalopMeter v1.0</title>
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.4.custom.css" rel="stylesheet" />    
+        <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.4.custom.min.js"></script>
+        <link type="text/css" href="css/custom.css" rel="stylesheet" />
+        <script type="text/javascript"> 
+        var total_score             = 0;
+        var engine_score            = 0;
+        var orig_engine_score       = 0;
+        var more_engine_score       = 0;
+        var more_engine_total_score = 0;
+        var tbs_score               = 0;
+        var carbs_score             = 0;
+        var aspiration_score        = 0;
+        var body_style_score        = 0;
+        var more_body_style_score   = 0;
+        var wheels_driven_score     = 0;
+        var engine_location_score   = 0;
+        var transmission_score      = 0;
+        var country_of_origin_score = 0;
+        var powa_score              = 0;
+        var age_score               = 0;
+        var other_score             = 0;
+
+        var hybrid_flag = false;
+        
+        $(function() {
+            $("#accordian").accordion({
+                autoHeight: false,
+                change: function (event, ui) {
+                    if (ui.newHeader.text() == 'Point Key')
+                    {
+                        $("li[id^=score]").attr('class', 'light');
+                        
+                        score = parseInt(engine_score) + parseInt(more_engine_total_score) + parseInt(aspiration_score)
+                              + parseInt(body_style_score) + parseInt(more_body_style_score) + parseInt(wheels_driven_score)
+                              + parseInt(engine_location_score) + parseInt(transmission_score)
+                              + parseInt(country_of_origin_score) + parseInt(powa_score) + parseInt(age_score) + parseInt(other_score);
+
+                        if (score == 0) {
+                            $("#score_0").removeClass('light');
+                        }
+                        if (score >= 1 && score <= 5) {
+                            $("#score_1").removeClass('light');
+                        }
+                        if (score >= 6 && score <= 15) {
+                            $("#score_2").removeClass('light');
+                        }
+                        if (score >= 16 && score <= 30) {
+                            $("#score_3").removeClass('light');
+                        }
+                        if (score >= 31 && score <= 45) {
+                            $("#score_4").removeClass('light');
+                        }
+                        if (score >= 46 && score <= 75) {
+                            $("#score_5").removeClass('light');
+                        }
+                        if (score >= 76 && score <= 100) {
+                            $("#score_6").removeClass('light');
+                        }
+                        if (score >= 101 && score <= 150) {
+                            $("#score_7").removeClass('light');
+                        }
+                        if (score >= 151 && score <= 200) {
+                            $("#score_8").removeClass('light');
+                        }
+                        if (score >= 201 && score <= 250) {
+                            $("#score_9").removeClass('light');
+                        }
+                        if (score >= 251) {
+                            $("#score_10").removeClass('light');
+                        }
+
+                        $("#points_label").html(score);
+                    }
+                }
+            });
+        });
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <h1>JalopMeter v1.0</h1>
+            <h2>How Jalopnik is Your Car?</h2>
+        </div>
+        <div id="accordian">
+            <h3><a href="#">1: Engine <span id="engine_score_label">0</span> points</a></h3>
+            <div>
+                <select id="engine" name="engine">
+                    <option value=" "> </option>
+                    <option value="0">4-Cylinder</option>
+                    <option value="1">3-Cylinder</option>
+                    <option value="50">2-Cylinder</option>
+                    <option value="100">1-Cylinder</option>
+                    <option value="2">5-Cylinder</option>
+                    <option value="3">6-Cylinder (V6)</option>
+                    <option value="10">6-Cylinder (straight)</option>
+                    <option value="15">8-Cylinder (V8)</option>
+                    <option value="20">8-Cylinder (straight)</option>
+                    <option value="25">10-Cylinder</option>
+                    <option value="30">12-Cylinder (V12)</option>
+                    <option value="50">12-Cylinder (Flat)</option>
+                    <option value="100">16-Cylinder</option>
+                    <option value="23">Rotary</option>
+                    <option value="1000000">Turbine</option>
+                    <option value="-2">Electric</option>
+                </select>
+                <input type="checkbox" id="engine_hybrid" name="engine_hybrid" /> Hybrid?</td>
+                <div id="engine_tag" class="tag"></div>
+                <script>
+                $("#engine").change(function () {
+                    $("#engine_tag").html('');
+                    $("#engine_hybrid").removeAttr('checked');
+                    engine_score = 0;
+                    orig_engine_score = 0;
+                    hybrid_flag = false;
+
+                    engine_score = $(this).val();
+
+                    switch ($("#engine").attr('selectedIndex'))
+                    {
+                        case 0:
+                            engine_score = 0;
+                            orig_engine_score = 0;
+                            hybrid_flag = false;
+                            $("#engine_hybrid").removeAttr('checked');
+                            break;
+                        case 3:
+                            $("#engine_tag").html('We heart Trabants');
+                            break;
+                        case 4:
+                            $("#engine_tag").html('May your Fuldamobil live long and prosper.');
+                            break;
+                        case 5:
+                            $("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        engine_score = -5;
+                                        $(this).dialog('close');
+                                        $("#engine_score_label").html(engine_score);
+                                     },
+                                    'No' : function() {
+                                        engine_score = 2;
+                                        $(this).dialog('close');
+                                        $("#engine_score_label").html(engine_score);
+                                    }
+                                }
+                            });
+                            $("#dialogText").html('Is this 5-cylinder engine in a Jetta?');
+                            $("#engine_tag").html('What, you think an Acura Vigor deserves more?');
+                            break;
+                        case 7:
+                            $("#engine_tag").html('Datsun Z, Jeep Cherokee, 3-Series, Dodge Dart? Hell yeah!');
+                            break;
+                        case 10:
+                            $("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        engine_score = 75;
+                                        $(this).dialog('close');
+                                        $("#engine_score_label").html(engine_score);
+                                    },
+                                    'No' : function() {
+                                        engine_score = 25;
+                                        $(this).dialog('close');
+                                        $("#engine_score_label").html(engine_score);
+                                    }
+                                }
+                            });
+                            $("#dialogText").html('Are you driving a Bristol Fighter?');
+                            break;
+                        case 12:
+                            $("#engine_tag").html('Especially if you drive a 917.');
+                            break;
+                        case 15:
+                            $("#engine_tag").html('I hear you, Udman.');
+                            break;
+                        case 16:
+                            $("#engine_tag").html('Give 2 points to the guy sitting next you.');
+                            break;
+                    }
+                    $("#engine_score_label").html(engine_score);
+                });
+
+                $("#engine_hybrid").click(function () {
+                    if (hybrid_flag)
+                    {
+                        hybrid_flag = false;
+                        engine_score = orig_engine_score;
+                    }
+                    else
+                    {
+                        hybrid_flag = true;
+                        orig_engine_score = engine_score;
+                        engine_score = engine_score / 1.4;
+                        engine_score = engine_score.toPrecision(3);
+                    }
+                    $("#engine_score_label").html(engine_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">1.b: More engine <span id="more_engine_score_label">0</span> points</a></h3>
+            <div>
+                <select name="more_engine" id="more_engine">
+                    <option value=" "> </option>
+                    <option value="25">Longitudinally mounted</option>
+                    <option value="-10">Latitudinally mounted</option>
+                    <option value="10">Boxer layout</option>
+                    <option value="20">Slant</option>
+                    <option value="25">Flathead</option>
+                    <option value="25">Air Cooled</option>
+                    <option value="20">Diesel (domestic)</option>
+                    <option value="-20">Diesel (Euro-trash)</option>
+                </select>
+                <br /><br />
+                Throttle bodies
+                <select name="tbs" id="tbs">
+                    <option value="0">0</option>
+                    <option value="5">1</option>
+                    <option value="10">2</option>
+                    <option value="15">3</option>
+                    <option value="20">4</option>
+                    <option value="25">5</option>
+                </select>
+                <br /><br />
+                Carburetors
+                <select name="carbs" id="carbs">
+                   <option value="0">0</option>
+                   <option value="10">1</option>
+                   <option value="20">2</option>
+                   <option value="30">3</option>
+                   <option value="40">4</option>
+                   <option value="50">5</option> 
+                </select>
+                <div id="more_engine_tag" class="tag"></div>
+                <script>
+                $("#more_engine").change(function () {
+                    $("#more_engine_tag").html('');
+
+                    more_engine_score = $(this).val();
+                    
+                    if ($("#more_engine").attr('selectedIndex') == 0)
+                    {
+                        more_engine_score = 0;
+                        tbs_score         = 0;
+                        carbs_score       = 0;
+                        
+                        $("#tbs").attr('selectedIndex', 0);
+                        $("#carbs").attr('selectedIndex', 0);
+                    }
+                    else if ($("#more_engine").attr('selectedIndex') == 1)
+                    {
+                        msg = 'Even if you have a 4-banger, that 4-banger could be in a '
+                            + '<a href="http://jalopnik.com/277056/se7en-se7en-oh-my-se7en" '
+                            + 'target="_blank">Se7en</a>.';
+                        $("#more_engine_tag").html(msg);
+                    }
+
+                    more_engine_total_score = parseInt(more_engine_score) + parseInt(tbs_score) + parseInt(carbs_score);
+                    
+                    $("#more_engine_score_label").html(more_engine_total_score);
+                });
+                $("#tbs").change(function() {
+                    tbs_score = $(this).val();
+                    more_engine_total_score = parseInt(more_engine_score) + parseInt(tbs_score) + parseInt(carbs_score);
+                    
+                    $("#more_engine_score_label").html(more_engine_total_score);
+                });
+                $("#carbs").change(function() {
+                    carbs_score = $(this).val();
+                    more_engine_total_score = parseInt(more_engine_score) + parseInt(tbs_score) + parseInt(carbs_score);
+                    
+                    $("#more_engine_score_label").html(more_engine_total_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">2: Aspiration <span id="aspiration_score_label">0</span> points</a></h3>
+            <div>
+                <select name="aspiration" id="aspiration">
+                    <option value=" "> </option>
+                    <option value="0">Naturally aspirated</option>
+                    <option value="15">Turbocharged</option>
+                    <option value="15">Supercharged</option>
+                    <option value="20">Twin-Turbo (dual)</option>
+                    <option value="30">Twin-Turbo (sequential)</option>
+                    <option value="50">Quad-Turbo</option>
+                    <option value="100">Dualcharged (super and turbo)</option>
+                </select>
+                <div id="aspiration_tag" class="tag"></div>
+                <script>
+                $("#aspiration").change(function() {
+                    aspiration_score = $(this).val();
+                    $("#aspiration_score_label").html(parseInt(aspiration_score));
+                });
+                </script>
+            </div>
+            <h3><a href="#">3: Body Style <span id="body_style_score_label">0</span> points</a></h3>
+            <div>
+                <select name="body_style" id="body_style">
+                    <option value=" "> </option>
+                    <option value="0">4-doors</option>
+                    <option value="5">5-doors</option>
+                    <option value="10">3-doors</option>
+                    <option value="25">2-doors</option>
+                    <option value="50">0-doors</option>
+                    <option value="100">Doors welded shut</option>
+                    <option value="101">Caminoized</option>
+                    <option value="15">Convertible</option>
+                    <option value="-10">Hardtop Convertible</option>
+                    <option value="50">4-door Hardtop Convertible</option>
+                    <option value="50">Suicide Doors</option>
+                </select>
+                <div id="body_style_tag" class="tag"></div>
+                <script>
+                $("#body_style").change(function() {
+                	$("#body_style_tag").html('');
+                    
+                    body_style_score = $(this).val();
+
+                    switch ($("#body_style").attr('selectedIndex'))
+                    {
+                        case 0:
+                            body_style_score = 0;
+                            break;
+                        case 1:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        body_style_score = 20;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                        $("#body_style_tag").html('For stealth');
+                                    },
+                                    'No' : function() {
+                                        engine_score = 25;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                    }
+                                }
+                            });
+                            $("#dialogText").html('Is your 4-door an E39 M5?');
+                            break;
+                        case 2:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        body_style_score = -10;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                        body_style_score = 5;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                        $("#body_style_tag").html('Despite what Lutz says, we love wagons.');
+                                    }
+                                }
+                            });
+                            $("#dialogText").html('Do any of those 5 doors slide?');
+                            break;
+                        case 3:
+                            $("#body_style_tag").html('Viva la shooting brake!');
+                            break;
+                        case 4:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        body_style_score = 35;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                        body_style_score = 25;
+                                        $(this).dialog('close');
+                                        $("#body_style_score_label").html(body_style_score);
+                                    }
+                                }
+                            });
+                        	$("#dialogText").html('Are these two doors gullwing and/or scissors?');
+                        	$("#body_style_tag").html('Screw practicality.');
+                            break;
+                    }
+                    $("#body_style_score_label").html(body_style_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">3.b: Body Style - Trucks and SUVs <span id="more_body_style_score_label">0</span> points</a></h3>
+            <div>
+                <select name="more_body_style" id="more_body_style">
+                    <option value="0"> </option>
+                    <option value="10">Body on Frame</option>
+                    <option value="-20">Unit Body</option>
+                    <option value="20">Flatbed</option>
+                    <option value="50">Dually</option>
+                    <option value="-300">Minivan</option>
+                    <option value="30">Panel van</option>
+                    <option value="50">Custom Van</option>
+                </select>
+                <script>
+                $("#more_body_style").change(function() {
+                    more_body_style_score = $(this).val();
+                    
+                    $("#more_body_style_score_label").html(more_body_style_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">4: Wheels Driven <span id="wheels_driven_score_label">0</span> points</a></h3>
+            <div>
+                <select name="wheels_driven" id="wheels_driven">
+                    <option value=" "> </option>
+                    <option value="0">Front-wheel drive</option>
+                    <option value="10">All-wheel drive</option>
+                    <option value="15">4-wheel drive</option>
+                    <option value="25">Rear-wheel drive</option>
+                </select>
+                <div id="wheels_driven_tag" class="tag"></div>
+                <script>
+                $("#wheels_driven").change(function() {
+                    $("#wheels_driven_tag").html('');
+
+                    wheels_driven_score = $(this).val();
+
+                    switch ($("#wheels_driven").attr('selectedIndex'))
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        wheels_driven_score = -105;
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                    }
+                                }
+                            });
+                            msg = "Hey, I love a good front driver as much as "
+                                + "the next guy, but you just don't get any "
+                                + "points. Sorry.";
+                            $("#wheels_driven_tag").html(msg);
+                            $("#dialogText").html('Is the vehicle a SUV?');
+                            break;
+                        case 3:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        wheels_driven_score = 15;
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                        wheels_driven_score = -50;
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                    }
+                                }
+                            });
+                            msg = 'This means you have low gears and you use '
+                                + 'them. Have you ever moved your transfer case?';
+                        	$("#dialogText").html(msg);
+                            break;
+                        case 4:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                                        wheels_driven_score = -55;
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                        wheels_driven_score = 25;
+                                        $(this).dialog('close');
+                                        $("#wheels_driven_score_label").html(wheels_driven_score);
+                                    }
+                                }
+                            });
+                            $("#dialogText").html('Is the vehicle a SUV?');
+                            $("#wheels_driven_tag").html('Lets face facts. Rear-wheel drive is the best.');
+                            break;
+                    }
+
+                    $("#wheels_driven_score_label").html(wheels_driven_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">5: Engine Location <span id="engine_location_score_label">0</span> points</a></h3>
+            <div>
+                <select name="engine_location" id="engine_location">
+                    <option value=" "> </option>
+                    <option value="0">Front</option>
+                    <option value="10">Mid</option>
+                    <option value="20">Rear</option>
+                    <option value="100">Two engines</option>
+                </select>
+                <div id="engine_location_tag" class="tag"></div>
+                <script>
+                $("#engine_location").change(function() {
+                    $("#engine_location_tag").html('');
+
+                    engine_location_score = $(this).val();
+
+                    if ($("#engine_location").attr('selectedIndex') == 0)
+                    {
+                        engine_location_score = 0;
+                    }
+                    else if ($("#engine_location").attr('selectedIndex') == 4)
+                    {
+                        $("#engine_location_tag").html('<a href="http://jalopnik.com/cars/retro/864-cubes-of-hairy-oldsmobile-goodness-246169.php" target="_blank">Hairy Olds</a>');
+                    }
+
+                    $("#engine_location_score_label").html(engine_location_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">6: Transmission <span id="transmission_score_label">0</span> points</a></h3>
+            <div>
+                <select name="transmission" id="transmission">
+                    <option value=" "> </option>
+                    <option value="0">Automatic</option>
+                    <option value="20">Manual</option>
+                    <option value="60">Manual on the tree</option>
+                    <option value="-20">CVT</option>
+                    <option value="30">Crashbox</option>
+                    <option value="5">Paddle shifters</option>
+                </select>
+                <div id="transmission_tag" class="tag"></div>
+                <script>
+                $("#transmission").change(function() {
+                    $("#transmission_tag").html('');
+
+                    transmission_score = $(this).val();
+
+                    if ($("#transmission").attr('selectedIndex') == 0)
+                    {
+                    	transmission_score = 0;
+                    }
+                    else if ($("#transmission").attr('selectedIndex') == 1)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        $(this).dialog('close');
+
+                    		        $("#modalDialog").dialog({
+                                        resizable: false,
+                                        width: 500,
+                                        modal: true,
+                                        buttons: {
+                                            'Yes' : function() {
+                                                transmission_score = -30;
+                                                $(this).dialog('close');
+                                                $("#transmission_score_label").html(transmission_score);
+                                                
+                                            },
+                                            'No' : function() {
+                                            	transmission_score = 10;
+                                                $(this).dialog('close');
+                                                $("#transmission_score_label").html(transmission_score);
+                                            }
+                                        }
+                                    });
+                                	$("#dialogText").html('Is it that weird new BMW/MB column shifter?');
+                                },
+                                'No' : function() {
+                                    transmission_score = 0;
+                                    $(this).dialog('close');
+                                    $("#transmission_score_label").html(transmission_score);
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Is it column shift?');
+                    }
+                    else if ($("#transmission").attr('selectedIndex') == 2)
+                    {
+                        $("#transmission_tag").html('And good for you.');
+                    }
+                    else if ($("#transmission").attr('selectedIndex') == 4)
+                    {
+                        $("#transmission_tag").html("You really don't get this whole driving thing, do you?");
+                    }
+                    else if ($("#transmission").attr('selectedIndex') == 6)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        transmission_score = 30;
+                                    $(this).dialog('close');
+                                    $("#transmission_score_label").html(transmission_score);
+                                    
+                                },
+                                'No' : function() {
+                                	transmission_score = 5;
+                                    $(this).dialog('close');
+                                    $("#transmission_score_label").html(transmission_score);
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Ferrari/Maserati-style setup where the paddles are stock-mounted?');
+                    }
+
+                    $("#transmission_score_label").html(transmission_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">7: Country of Origin <span id="country_of_origin_score_label">0</span> points</a></h3>
+            <div>
+                <select name="country_of_origin" id="country_of_origin">
+                    <option value=" "> </option>
+                    <option value="0">Korea</option>
+                    <option value="1">Japan</option>
+                    <option value="5">'Merica</option>
+                    <option value="10">Germany</option>
+                    <option value="15">Sweden</option>
+                    <option value="20">Britian</option>
+                    <option value="25">Italy</option>
+                    <option value="30">Eastern Bloc</option>
+                    <option value="40">India</option>
+                    <option value="50">France</option>
+                    <option value="75">Australia</option>
+                    <option value="100">Mixed origin</option>
+                    <option value="13">Other (Canada, Israel, Northern Ireland)</option>
+                </select>
+                <div id="country_of_origin_tag" class="tag"></div>
+                <script>
+                $("#country_of_origin").change(function() {
+                    $("#country_of_origin_tag").html('');
+
+                    country_of_origin_score = $(this).val();
+
+                    if ($("#country_of_origin").attr('selectedIndex') == 0)
+                    {
+                        country_of_origin_score = 0;
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 2)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        country_of_origin_score = -10;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                    
+                                },
+                                'No' : function() {
+                                	country_of_origin_score = 1;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Are you driving a 4-banger slushbox Camry?');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 3)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        country_of_origin_score = -5;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                    
+                                },
+                                'No' : function() {
+                                	country_of_origin_score = 5;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Was your domestic car made in Korea?');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 4)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        country_of_origin_score = -10;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                    
+                                },
+                                'No' : function() {
+                                	$(this).dialog('close');
+
+                                	$("#modalDialog").dialog({
+                                        resizable: false,
+                                        width: 500,
+                                        modal: true,
+                                        buttons: {
+                                            'Yes' : function() {
+                                		        country_of_origin_score = -100;
+                                                $(this).dialog('close');
+                                                $("#country_of_origin_score_label").html(country_of_origin_score);
+                                                
+                                            },
+                                            'No' : function() {
+                                            	country_of_origin_score = 10;
+                                                $(this).dialog('close');
+                                                $("#country_of_origin_score_label").html(country_of_origin_score);
+                                            }
+                                        }
+                                    });
+                                	$("#dialogText").html('Are you driving a new Bug?');
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Are you driving a Jetta?');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 6)
+                    {
+                        $("#country_of_origin_tag").html('You brave man.');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 7)
+                    {
+                        $("#country_of_origin_tag").html('You brave fucker.');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 11)
+                    {
+                        $("#country_of_origin_tag").html('Land of the Raging Hoon.');
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 12)
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        country_of_origin_score = -90;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                    
+                                },
+                                'No' : function() {
+                                	country_of_origin_score = 100;
+                                    $(this).dialog('close');
+                                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                                }
+                            }
+                        });
+                        msg = "As in your French SM has an Italian engine. Or "
+                            + "if your Cobra has a British chassis and a 'Merican "
+                            + "engine that was built in Canada.<br /><br />"
+                            + "Are you driving an R-Class built in Tennessee?";
+                    	$("#dialogText").html(msg);
+                    }
+                    else if ($("#country_of_origin").attr('selectedIndex') == 13)
+                    {
+                        $("#country_of_origin_tag").html("And you're lucky to be getting them.");
+                    }
+
+                    $("#country_of_origin_score_label").html(country_of_origin_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">8: POWA! <span id="powa_score_label">0</span> points</a></h3>
+            <div>
+                <select name="powa" id="powa">
+                    <option value=" "> </option>
+                    <option value="25">0 - 50 hp</option>
+                    <option value="5">51 - 100 hp</option>
+                    <option value="0">101 - 160 hp</option>
+                    <option value="5">161 - 270 hp</option>
+                    <option value="10">271 - 380 hp</option>
+                    <option value="25">381 - 450 hp</option>
+                    <option value="2">451 - 600 hp</option>
+                    <option value="30">601 - 750 hp</option>
+                    <option value="50">751 - 1000 hp</option>
+                    <option value="100">1001+ hp</option>
+                </select>
+                <div id="powa_tag" class="tag"></div>
+                <script>
+                $("#powa").change(function() {
+                    $("#powa_tag").html('');
+
+                    powa_score = $(this).val();
+
+                    switch ($("#powa").attr('selectedIndex'))
+                    {
+                        case 0:
+                            powa_score = 0;
+                            break;
+                        case 1:
+                            $("#powa_tag").html("You're very brave.");
+                            break;
+                        case 2:
+                        	$("#powa_tag").html("You're very poor.");
+                            break;
+                        case 3:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                        		        powa_score = 20;
+                                        $(this).dialog('close');
+                                        $("#powa_score_label").html(powa_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                    	powa_score = 0;
+                                        $(this).dialog('close');
+                                        $("#powa_score_label").html(powa_score);
+                                    }
+                                }
+                            });
+                        	$("#dialogText").html('Are you driving a Se7en or a Miata?');
+                            break;
+                        case 4:
+                        	$("#powa_tag").html('Not too shabby.');
+                            break;
+                        case 5:
+                        	$("#powa_tag").html("We like where you're going.");
+                            break;
+                        case 6:
+                        	$("#powa_tag").html('Awesome. The power sweet spot. Not too hot, not too cold');
+                            break;
+                        case 7:
+                        	$("#powa_tag").html("You're rich. Big deal. Unless you drive a Z06. Then we're jealous and we hate you.")
+                            break;
+                        case 8:
+                        	$("#powa_tag").html('You might be rich, but we love your taste in cars.');
+                            break;
+                        case 9:
+                        	$("#powa_tag").html('50 points seems about right.');
+                            break;
+                        case 10:
+                        	$("#modalDialog").dialog({
+                                resizable: false,
+                                width: 500,
+                                modal: true,
+                                buttons: {
+                                    'Yes' : function() {
+                        		        powa_score = 1000000000;
+                                        $(this).dialog('close');
+                                        $("#powa_score_label").html(powa_score);
+                                        
+                                    },
+                                    'No' : function() {
+                                    	powa_score = 100;
+                                        $(this).dialog('close');
+                                        $("#powa_score_label").html(powa_score);
+                                    }
+                                }
+                            });
+                        	$("#dialogText").html('Are you driving a Vector?');
+                            break;
+                    }
+
+                    $("#powa_score_label").html(powa_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">9: Age <span id="age_score_label">0</span> points</a></h3>
+            <div>
+                <select name="age" id="age">
+                    <option value=" "> </option>
+                    <option value="10">2011</option>
+                    <option value="5">4 years or younger</option>
+                    <option value="0">5 - 10 years</option>
+                    <option value="10">11 - 20 years</option>
+                    <option value="20">21 - 30 years</option>
+                    <option value="30">31 - 40 years</option>
+                    <option value="40">41 - 50 years</option>
+                    <option value="50">51 - 60 years</option>
+                    <option value="100">Pre-WWII</option>
+                </select>
+                <div id="age_tag" class="tag"></div>
+                <script>
+                $("#age").change(function() {
+                    $("#age_tag").html('');
+
+                    age_score = $(this).val();
+                    
+                    switch ($("#age").attr('selectedIndex'))
+                    {
+                        case 1:
+                            $("#age_tag").html('Congratulations.');
+                            break;
+                        case 4:
+                        	$("#age_tag").html('You can wrench.');
+                            break;
+                        case 5:
+                        	$("#age_tag").html('You can really wrench.');
+                            break;
+                        case 6:
+                        	$("#age_tag").html('Can we have a ride? Pretty please?');
+                            break;
+                        case 7:
+                        	$("#age_tag").html('The golden age of rad. Sigh...');
+                            break;
+                        case 8:
+                        	$("#age_tag").html('Especially if you have Gullwings.');
+                            break;
+                        case 9:
+                        	$("#age_tag").html('And we tip our collective cap at you.');
+                            break;
+                    }
+
+                    $("#age_score_label").html(age_score);
+                });
+                </script>
+            </div>
+            <h3><a href="#">10: Other <span id="other_score_label">0</span> points</a></h3>
+            <div>
+            <table>
+                <tr>
+                    <td>Cupholders</td>
+                    <td>
+                        <select name="cupholders" id="cupholders">
+                            <option value=" "> </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ashtrays</td>
+                    <td>
+                        <select name="ashtrays" id="ashtrays">
+                            <option value=" "> </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bondo Patches</td>
+                    <td>
+                        <input type="text" name="bondo" id="bondo" size="5" maxlength="3" value="0" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>NO FEAR sticker</td>
+                    <td>
+                        <input type="checkbox" name="no_fear" id="no_fear" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Truck Nutz</td>
+                    <td>
+                        <input type="checkbox" name="truck_nutz" id="truck_nutz" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>All-digital dashboard</td>
+                    <td>
+                        <input type="checkbox" name="dashboard" id="dashboard" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Working all-digital dashboard</td>
+                    <td>
+                        <input type="checkbox" name="working_dashboard" id="working_dashboard" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hydropneumatic suspension</td>
+                    <td>
+                        <input type="checkbox" name="hydropneumatic" id="hydropneumatic" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Waterbed</td>
+                    <td>
+                        <input type="checkbox" name="waterbed" id="waterbed" />
+                        <script>
+                        
+                        </script>
+                    </td>
+                </tr>
+            </table>
+            <script>
+                var cupholder=0, ashtray=0, bondo=0, no_fear=0, truck_nutz=0;
+                var dashboard=0, working_dashboard=0, hydropneumatic=0, waterbed=0;
+                
+                function sum_others ()
+                {
+                    out = parseInt(cupholder) + parseInt(ashtray)
+                        + parseInt(bondo) + parseInt(no_fear) + parseInt(truck_nutz)
+                        + parseInt(dashboard) + parseInt(working_dashboard)
+                        + parseInt(hydropneumatic) + parseInt(waterbed);
+
+                    other_score = out;
+
+                    $("#other_score_label").html(other_score);
+                }
+                $("#cupholders").change(function() {
+                    cnt = parseInt($(this).val());
+                    
+                    if ($("#cupholders").attr('selectedIndex') == 0)
+                    {
+                        cupholder = 0;
+                    }
+                    else
+                    {
+                        cupholder = cnt * -5;
+                    }
+                    sum_others();
+                });
+                $("#ashtrays").change(function() {
+                    cnt = parseInt($(this).val());
+
+                    if ($("#ashtray").attr('selectedIndex') == 0)
+                    {
+                        ashtray = 0;
+                    }
+                    else
+                    {
+                    	ashtray = cnt * 5;
+
+                        if (cnt > 5)
+                        {
+                            ashtray += 50;
+                        }
+                    }
+                    sum_others();
+                });
+                $("#bondo").blur(function() {
+                    cnt = parseInt($(this).val());
+
+                    bondo = cnt * 10;
+
+                    sum_others();
+                });
+                $("#no_fear").change(function() {
+                    if ($("#no_fear").attr('checked'))
+                    {
+                        no_fear = -1000;
+                    }
+                    else
+                    {
+                        no_fear = 0;
+                    }
+                    sum_others();
+                });
+                $("#truck_nutz").change(function() {
+                    if ($("#truck_nutz").attr('checked'))
+                    {
+                    	$("#modalDialog").dialog({
+                            resizable: false,
+                            width: 500,
+                            modal: true,
+                            buttons: {
+                                'Yes' : function() {
+                    		        truck_nutz = 500;
+                                    $(this).dialog('close');
+                                    sum_others();
+                                    
+                                },
+                                'No' : function() {
+                                	truck_nutz = -100;
+                                    $(this).dialog('close');
+                                    sum_others();
+                                }
+                            }
+                        });
+                    	$("#dialogText").html('Do you live in Virginia?');
+                    }
+                    else
+                    {
+                        truck_nutz = 0;
+                        sum_others();
+                    }
+                });
+                $("#dashboard").change(function() {
+                    if ($("#dashboard").attr('checked'))
+                    {
+                        dashboard = 25;
+                    }
+                    else
+                    {
+                        dashboard = 0;
+                    }
+                    sum_others();
+                });
+                $("#working_dashboard").change(function() {
+                    if ($("#working_dashboard").attr('checked'))
+                    {
+                        working_dashboard = 30;
+                    }
+                    else
+                    {
+                        working_dashboard = 0;
+                    }
+                    sum_others();
+                });
+                $("#hydropneumatic").change(function() {
+                    if ($("#hydropneumatic").attr('checked'))
+                    {
+                    	hydropneumatic = 50;
+                    }
+                    else
+                    {
+                    	hydropneumatic = 0;
+                    }
+                    sum_others();
+                });
+                $("#waterbed").change(function() {
+                    if ($("#waterbed").attr('checked'))
+                    {
+                        waterbed = 6.9;
+                    }
+                    else
+                    {
+                        waterbed = 0;
+                    }
+                    sum_others();
+                });
+            </script>
+            </div>
+            <h3><a href="#">Point Key</a></h3>
+            <div>
+                <p id="total_score_label">Score: <span id="points_label"></span></p>
+                <ul class="naked_list">
+                    <li id="score_0" class="light">0 Points: Go ride a bike.</li>
+                    <li id="score_1" class="light">1-5 Points: Edmunds is that way.</li>
+                    <li id="score_2" class="light">6-15 Points: Hey, at least you know what a car is.</li>
+                    <li id="score_3" class="light">16-30 points: That's a cool car you got there. Time to Sawzall the back off.</li>
+                    <li id="score_4" class="light">31-45 points: It's no Hoondai Sonata, but it's pretty good.</li>
+                    <li id="score_5" class="light">46-75 points: You like driving. You even like driving a lot. But why all the compromises, man?</li>
+                    <li id="score_6" class="light">76-100 points: 'Vettes get 'em wet, dude. As do turbo-diesel Peugeot wagons.</li>
+                    <li id="score_7" class="light">101-150 points: Is that an E39 M5 in your pocket? Or do you have an erection?</li>
+                    <li id="score_8" class="light">151-200 points Fantasy Garage</li>
+                    <li id="score_9" class="light">201-250 points: Bitchin' Camino</li>
+                    <li id="score_10" class="light">251+ points: You love cars. Secret cars, concept cars, flying cars, vintage cars, tricked-out cars, red cars, black cars, blonde cars - sometimes, cars just because of the curve of a hood.</li>
+                </ul>
+            </div>
+        </div>
+        <div id="modalDialog" title="Whoa just a second there professor.">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="dialogText">Blah</span></p>
+        </div>
+        <div id="footer">
+            <p>2010 JalopMeter.com</p>
+        </div>
+    </body>
+</html>
